@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::get('/', function () {
+Route::get('/test', function () {
     // return view('welcome');
     return DB::getConfig();
 });
