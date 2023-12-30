@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
     protected $fillable = [
         'name',
-        'discord_user_id',
+        'discord_id',
     ];
 
-    function players(): BelongsTo
+    function players(): hasMany
     {
-        return $this->belongsTo(Player::class);
+        return $this->hasMany(Player::class, 'discord_user_id', 'discord_id');
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name');
             $table->string('last_match_id')->nullable();
+            $table->string('discord_user_id')->nullable();
             $table->timestamps();
         });
     }

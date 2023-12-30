@@ -10,34 +10,35 @@ use Exception;
 
 class UserService
 {
+    public static function index()
+    {
+        try {
+            return User::with('players')->get();
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
     public static function store(NewUserRequest $req)
     {
         $user = User::make([
             'name' => $req->name,
-            'discord_user_id' => $req->id,
+            'discord_id' => $req->discord_id,
         ]);
 
         try {
-            return $user->save();
+            $user->save();
+            
+            return response('User ' . $req->name . ' успешно создан', 201);
         } catch (Exception $e) {
             return $e;
         }
     }
-    
-    public static function index()
+
+    public static function show(string $discordId)
     {
         try {
-            return User::all();
-        } catch (Exception $e) {
-            return $e;
-        }
-    }
-    
-    public static function show(string $discordUserId)
-    {
-        try {
-            $foo = User::where('discord_user_id', $discordUserId)->first();
-            dd($foo);
+            return User::where('discord_id', $discordId)->first();
         } catch (Exception $e) {
             return $e;
         }

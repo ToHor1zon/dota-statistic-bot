@@ -2,24 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Player extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'id',
         'name',
+        'discord_user_id',
     ];
 
-    function user(): MorphTo
+    function user(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class, 'discord_user_id', 'discord_id');
     }
 }
+

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
-use App\Models\User;
+use App\Http\Controllers\PlayerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +19,11 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::resource('users', UserController::class)->only([
-    'index', 'show', 'store'
+Route::resource('users', UserController::class)->except([
+    'create', 'edit'
+]);
+
+
+Route::resource('players', PlayerController::class)->except([
+    'create', 'edit'
 ]);
