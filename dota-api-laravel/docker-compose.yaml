@@ -1,0 +1,46 @@
+version: '3.3'
+
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ../nginx
+      dockerfile: ../nginx/Dockerfile
+    ports:
+      - 8098:80
+    networks:
+      - dota-statistic-bot
+    volumes:
+      - ../nginx:/var/www/dota-api-laravel
+
+  dota-api-laravel:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/var/www/dota-api-laravel
+    networks:
+      - dota-statistic-bot
+
+  discord-bot-golang:
+    build:
+      dockerfile: ../discord-bot-golang/Dockerfile
+      context: ../discord-bot-golang
+      target: dev
+    volumes:
+      - ../discord-bot-golang:/var/www/discord-bot-golang
+    networks:
+      - dota-statistic-bot
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 33061:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+    networks:
+      - dota-statistic-bot
+
+networks:
+  dota-statistic-bot:
