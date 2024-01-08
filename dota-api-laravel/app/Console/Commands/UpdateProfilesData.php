@@ -4,8 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use App\Services\PlayerService;
+use App\Services\ApiStratz\PlayerService;
 use App\Models\Player;
+use Illuminate\Support\Facades\Log;
 
 class UpdateProfilesData extends Command
 {
@@ -28,12 +29,31 @@ class UpdateProfilesData extends Command
      */
     public function handle()
     {
+        $this->info('Command "profiles:update-data" executed successfully.');
+
         $chunkedIds = Player::select('id')->get()->pluck('id')->chunk(5);
 
-        $chunkedIds->each(function(Collection $chunk) {
+        $chunkedIds->each(function (Collection $chunk) {
             $playersData = PlayerService::getPlayersProfileData($chunk->toArray());
-            foreach($playersData as $data) {
-                Player::where('id', $data['steamAccountId'])->update(['last_match_id' => $data['matches'][0]['id']]);
+
+            foreach ($playersData as $data) {
+                $lastMatchData = $data['matches'][0];
+
+                if (!$lastMatchData['statsDateTime']) {
+                    return;
+                }
+
+                $player = Player::find($data['steamAccountId']);
+
+                if ($lastMatchData['id'] == $player->last_match_id) {
+                    return;
+                }
+
+                $player->last_match_id = $data['matches'][0]['id'];
+                $player->name = $data['names'][0]['name'];
+                $player->save();
+
+                Log::info('UPDATED with id: ' . $player->id);
             }
         });
     }

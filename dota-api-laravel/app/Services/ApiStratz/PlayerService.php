@@ -13,7 +13,7 @@ class PlayerService
             return QraphQLService::get('
                 {
                     player(steamAccountId: ' . $steamAccountId . ') {
-                    steamAccountId
+                        steamAccountId
                     }
                 }
             ');
@@ -28,10 +28,14 @@ class PlayerService
             return QraphQLService::get('
                 {
                     players(steamAccountIds: [' . implode(', ', $steamAccountIds) . ']) {
-                    steamAccountId
-                    matches(request: {isParsed: true, lobbyTypeIds: [0, 1, 7]}) {
-                        id
-                    }
+                        names {
+                            name
+                        }
+                        steamAccountId
+                        matches(request: {isParsed: true, lobbyTypeIds: [0, 1, 7]}) {
+                            id
+                            statsDateTime
+                        }
                     }
                 }
             ')['players'];
