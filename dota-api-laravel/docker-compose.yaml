@@ -23,20 +23,6 @@ services:
     networks:
       - network
 
-  discord-bot-python:
-    container_name: discord-bot-python
-    build:
-      dockerfile: ../discord-bot-python/Dockerfile
-      context: ../discord-bot-python
-    ports:
-      - 8001:8000
-    stdin_open: true
-    tty: true
-    volumes:
-      - ../discord-bot-python:/var/www/discord-bot-python
-    networks:
-      - network
-
   mysql:
     container_name: mysql
     image: mysql:5.7
