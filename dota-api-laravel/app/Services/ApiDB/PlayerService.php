@@ -2,31 +2,35 @@
 
 namespace App\Services\ApiDB;
 
-
-use App\Http\Requests\NewPlayerRequest;
 use App\Models\Player;
 
 use Exception;
 
 class PlayerService
 {
-    public static function store(NewPlayerRequest $req) {
-        $user = Player::make([
-            'id' => $req->id,
-            'name' => $req->name,
-            'discord_user_id' => $req->discord_user_id,
+    
+    public static function isExists($id)
+    {
+        $player = Player::where('id', $id)->exists();
+    }
+
+    public static function store(array $reqParams) {
+        $player = Player::make([
+            'id' => $reqParams['id'],
+            'name' => $reqParams['name'],
+            'discord_user_id' => $reqParams['discord_user_id'],
         ]);
 
         try {
-            $user->save();
-            return response('Player ' . $req->name . ' успешно создан', 201);
+            $player->save();
+            return response('Player ' . $reqParams['name'] . ' успешно создан', 201);
         } catch (Exception $e) {
             return $e;
         }
     }
     
     public static function index() {
-        return Player::all();
+        return Player::with(['user'])->get();
     }
     
     public static function show(string $steamAccountId) {

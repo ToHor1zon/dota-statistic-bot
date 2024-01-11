@@ -13,7 +13,7 @@ class PlayerController extends Controller {
 
     public static function store(NewPlayerRequest $user)
     {
-        return PlayerService::store($user);
+        return PlayerService::store($user->all());
     }
 
     public static function show(string $discordUserId)

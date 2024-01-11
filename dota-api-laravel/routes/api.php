@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PlayerController;
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +27,6 @@ Route::resource('users', UserController::class)->except([
 Route::resource('players', PlayerController::class)->except([
     'create', 'edit'
 ]);
+
+
+Route::post('sign-up', [UserController::class, 'signUp']);

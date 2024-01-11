@@ -7,16 +7,19 @@ use App\Services\QraphQLService;
 
 class PlayerService
 {
-    public static function getPlayerProfileData(string $steamAccountId)
+    public static function getSteamAccountData(string $steamAccountId)
     {
         try {
             return QraphQLService::get('
                 {
                     player(steamAccountId: ' . $steamAccountId . ') {
-                        steamAccountId
+                        steamAccount {
+                          id
+                          name
+                        }
                     }
                 }
-            ');
+            ')['player']['steamAccount'];
         } catch (Exception $e) {
             throw $e;
         }
