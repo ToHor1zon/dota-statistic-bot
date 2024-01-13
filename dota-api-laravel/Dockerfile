@@ -1,10 +1,10 @@
 FROM php:8.2-fpm
 
 # Устанавливаем рабочую директорию 
-WORKDIR /var/www
+WORKDIR /var/www/dota-api-laravel
 
 # Копируем composer.lock и composer.json
-COPY ./composer.lock ./composer.json /var/www/dota-api-laravel/
+COPY ./composer.lock ./composer.json ./
 
 # Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
