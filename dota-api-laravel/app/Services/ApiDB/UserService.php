@@ -3,9 +3,9 @@
 namespace App\Services\ApiDB;
 
 use App\Models\User;
-use App\Models\Player;
+use App\Models\SteamAccount;
 
-use App\Services\ApiStratz\PlayerService as StratzApiPlayerService;
+use App\Services\ApiStratz\SteamAccountService as StratzApiSteamAccountService;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +15,7 @@ class UserService
     public static function signUp($req): JsonResponse
     {
         $isExistsUser = User::where('id', $req->discordUserId)->exists();
-        $isExistsPlayer = Player::where('id', $req->steamAccountId)->exists();
+        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
 
         if (!$isExistsUser) {
             self::store([
@@ -24,10 +24,10 @@ class UserService
             ]);
         }
 
-        if ($isExistsPlayer) {
-            $player = Player::where('id', $req->steamAccountId)->with(['user'])->get();
+        if ($isExistsSteamAccount) {
+            $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user'])->get();
 
-            if($player->pluck('user')[0]->discord_id !== $req->discordUserId) {
+            if($steamAccount->pluck('user')[0]->discord_id !== $req->discordUserId) {
                 return response()->json([
                     'message' => 'This SteamAccountId is already registered with another DiscordUserId'
                 ], 409);
@@ -37,7 +37,7 @@ class UserService
                 ], 409);
             }
         } else {
-            $steamAccountData = StratzApiPlayerService::getSteamAccountData($req->steamAccountId);
+            $steamAccountData = StratzApiSteamAccountService::getSteamAccountData($req->steamAccountId);
 
             if (!$steamAccountData) {
                 return response()->json([
@@ -45,7 +45,7 @@ class UserService
                 ], 409);
             }
 
-            $player = PlayerService::store([
+            $steamAccount = SteamAccountService::store([
                 'name' => $steamAccountData['name'],
                 'id' => $steamAccountData['id'],
                 'discord_user_id' => $req->discordUserId,
@@ -60,7 +60,7 @@ class UserService
     public static function index()
     {
         try {
-            return User::with('players')->get();
+            return User::with('steamAccounts')->get();
         } catch (Exception $e) {
             return $e;
         }

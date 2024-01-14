@@ -24,7 +24,7 @@ Route::resource('users', UserController::class)->except([
 ]);
 
 
-Route::resource('players', PlayerController::class)->except([
+Route::resource('steam_accounts', SteamAccountController::class)->except([
     'create', 'edit'
 ]);
 

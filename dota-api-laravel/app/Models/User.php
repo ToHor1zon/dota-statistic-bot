@@ -12,8 +12,8 @@ class User extends Authenticatable
         'discord_id',
     ];
 
-    function players(): hasMany
+    function steamAccounts(): hasMany
     {
-        return $this->hasMany(Player::class, 'discord_user_id', 'discord_id');
+        return $this->hasMany(SteamAccount::class, 'discord_user_id', 'discord_id');
     }
 }

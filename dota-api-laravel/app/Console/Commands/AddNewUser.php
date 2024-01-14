@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use App\Services\PlayerService;
-use App\Models\Player;
+use App\Services\SteamAccountService;
+use App\Models\SteamAccount;
 
 class UpdateProfilesData extends Command
 {

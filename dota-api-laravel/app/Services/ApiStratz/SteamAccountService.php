@@ -5,7 +5,7 @@ namespace App\Services\ApiStratz;
 use Exception;
 use App\Services\QraphQLService;
 
-class PlayerService
+class SteamAccountService
 {
     public static function getSteamAccountData(string $steamAccountId)
     {
@@ -25,7 +25,7 @@ class PlayerService
         }
     }
 
-    public static function getPlayersProfileData(array $steamAccountIds)
+    public static function getSteamAccountsProfileData(array $steamAccountIds)
     {
         try {
             return QraphQLService::get('

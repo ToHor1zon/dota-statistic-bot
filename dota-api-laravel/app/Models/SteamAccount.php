@@ -6,12 +6,11 @@ use App\Models\GameMatch;
 use App\Services\ApiStratz\MatchService as StratzMatchService;
 use App\Services\ApiDB\MatchService as DBMatchService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 
-class Player extends Model
+class SteamAccount extends Model
 {
     protected $fillable = [
         'id',

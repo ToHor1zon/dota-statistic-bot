@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('players', function (Blueprint $table) {
+        Schema::create('steam_accounts', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
             $table->string('last_match_id')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('players');
+        Schema::dropIfExists('steam_accounts');
     }
 };

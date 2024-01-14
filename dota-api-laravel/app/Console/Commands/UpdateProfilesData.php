@@ -4,18 +4,18 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use App\Services\ApiStratz\PlayerService;
-use App\Models\Player;
+use App\Services\ApiStratz\SteamAccountService;
+use App\Models\SteamAccount;
 use Illuminate\Support\Facades\Log;
 
-class UpdateProfilesData extends Command
+class UpdateSteamAccountsData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'profiles:update-data';
+    protected $signature = 'steam_accounts:update-data';
 
     /**
      * The console command description.
@@ -29,31 +29,31 @@ class UpdateProfilesData extends Command
      */
     public function handle()
     {
-        $this->info('Command "profiles:update-data" executed successfully.');
+        $this->info('Command "steam_accounts:update-data" executed successfully.');
 
-        $chunkedIds = Player::select('id')->get()->pluck('id')->chunk(5);
+        $chunkedIds = SteamAccount::select('id')->get()->pluck('id')->chunk(5);
 
         $chunkedIds->each(function (Collection $chunk) {
-            $playersData = PlayerService::getPlayersProfileData($chunk->toArray());
+            $steamAccountsData = SteamAccountService::getSteamAccountsProfileData($chunk->toArray());
 
-            foreach ($playersData as $data) {
+            foreach ($steamAccountsData as $data) {
                 $lastMatchData = $data['matches'][0];
 
                 if (!$lastMatchData['statsDateTime']) {
                     return;
                 }
 
-                $player = Player::find($data['steamAccountId']);
+                $steamAccount = SteamAccount::find($data['steamAccountId']);
 
-                if ($lastMatchData['id'] == $player->last_match_id) {
+                if ($lastMatchData['id'] == $steamAccount->last_match_id) {
                     return;
                 }
 
-                $player->last_match_id = $data['matches'][0]['id'];
-                $player->name = $data['names'][0]['name'];
-                $player->save();
+                $steamAccount->last_match_id = $data['matches'][0]['id'];
+                $steamAccount->name = $data['names'][0]['name'];
+                $steamAccount->save();
 
-                Log::info('UPDATED with id: ' . $player->id);
+                Log::info('UPDATED with id: ' . $steamAccount->id);
             }
         });
     }

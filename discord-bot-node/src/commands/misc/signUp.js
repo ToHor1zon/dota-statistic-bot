@@ -5,7 +5,7 @@ const {
 
 module.exports = {
   name: 'sign-up',
-  description: 'Registering new user and player',
+  description: 'Registering new user and steam account',
   // devOnly: Boolean,
   // testOnly: Boolean,
   options: [
