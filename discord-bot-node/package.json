@@ -14,7 +14,7 @@
       "index.js"
     ],
     "ext": "js,json",
-    "exec": "node index"
+    "exec": "node"
   },
   "author": "",
   "license": "ISC",

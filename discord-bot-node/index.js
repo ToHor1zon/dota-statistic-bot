@@ -1,11 +1,17 @@
-const { Client, Collection, GatewayIntentBits  } = require('discord.js');
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
 require('dotenv').config();
-console.log(123);
+const { Client, IntentsBitField } = require('discord.js');
+const eventHandler = require('./src/handlers/eventHandler');
 
-const { DISCORD_BOT_TOKEN } = process.env;
+const client = new Client({
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.MessageContent,
+  ],
+});
+
+eventHandler(client);
 
 
-client.login(DISCORD_BOT_TOKEN);
+client.login(process.env.DISCORD_BOT_TOKEN);
