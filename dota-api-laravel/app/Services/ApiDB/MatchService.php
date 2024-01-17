@@ -28,7 +28,7 @@ class MatchService
             ]);
 
             $match->save();
-            Log::info('Match with id: ' . $matchData['id'] . ' успешно создан', 201);
+            Log::info('Match with id: ' . $match->id . ' successfully created');
         } catch (Exception $e) {
             Log::error($e);
         }

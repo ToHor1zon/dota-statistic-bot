@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\SaveNewMatchDataFromAPI;
 use App\Models\GameMatch;
 use App\Services\ApiStratz\MatchService as StratzMatchService;
 use App\Services\ApiDB\MatchService as DBMatchService;
@@ -22,19 +23,10 @@ class SteamAccount extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
+        Log::info('class SteamAccount extends Model');
         static::updated(function ($model) {
-            try {
-                $hasMatch = GameMatch::find($model->last_match_id);
-
-                if (!$hasMatch) {
-                    $matchData = StratzMatchService::getMatchData($model->last_match_id);
-
-                    DBMatchService::store($matchData);
-                }
-            } catch (Exception $e) {
-                Log::error($e);
-            }
+            SaveNewMatchDataFromAPI::dispatch($model->last_match_id);
         });
     }
 

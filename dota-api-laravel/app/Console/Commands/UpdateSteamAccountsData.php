@@ -15,7 +15,7 @@ class UpdateSteamAccountsData extends Command
      *
      * @var string
      */
-    protected $signature = 'steam_accounts:update-data';
+    protected $signature = 'steamAccounts:update-data';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class UpdateSteamAccountsData extends Command
      */
     public function handle()
     {
-        $this->info('Command "steam_accounts:update-data" executed successfully.');
+        $this->info('Command "steamAccounts:update-data" executed successfully.');
 
         $chunkedIds = SteamAccount::select('id')->get()->pluck('id')->chunk(5);
 
@@ -53,7 +53,7 @@ class UpdateSteamAccountsData extends Command
                 $steamAccount->name = $data['names'][0]['name'];
                 $steamAccount->save();
 
-                Log::info('UPDATED with id: ' . $steamAccount->id);
+                Log::info('SteamAccount ' . $steamAccount->id . ' UPDATED lastMatchId with new value: ' . $steamAccount->last_match_id);
             }
         });
     }

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('profiles:update-data')->everyMinute();
+        $schedule->command('steamAccounts:update-data')->everyMinute();
     }
 
     /**
