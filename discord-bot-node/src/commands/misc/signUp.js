@@ -22,7 +22,7 @@ module.exports = {
       const url = 'http://nginx:80/api/sign-up'
       const body = {
         "discordUserName": interaction.user.username,
-        "discordUserId": client.user.id,
+        "discordUserId": interaction.user.id,
         "steamAccountId": interaction.options.getString('steam-account-id')
       }
       await interaction.deferReply({ ephemeral: true });

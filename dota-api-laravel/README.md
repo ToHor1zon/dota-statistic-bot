@@ -71,7 +71,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## UPDATE steamAccount.lastMatchId:
 php artisan steamAccounts:update-data
 
-## RUN schedule:
+## RUN queue:
 php artisan queue:work
 
 ## RUN schedule:
