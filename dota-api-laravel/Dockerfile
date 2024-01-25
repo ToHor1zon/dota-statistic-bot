@@ -1,48 +1,18 @@
-FROM php:8.2-fpm
+# Learn more about the Server Side Up PHP Docker Images at:
+# https://serversideup.net/open-source/docker-php/
 
-# Устанавливаем рабочую директорию 
-WORKDIR /var/www/dota-api-laravel
+FROM serversideup/php:beta-8.3-fpm-nginx as base
 
-# Копируем composer.lock и composer.json
-COPY ./composer.lock ./composer.json ./
+# Fix permission issues in development by setting the "www-data"
+# user to the same user and group that is running docker.
+FROM base as development
+ARG USER_ID
+ARG GROUP_ID
+RUN docker-php-serversideup-set-id www-data ${USER_ID} ${GROUP_ID}
 
-# Устанавливаем зависимости
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
-    libpq-dev \
-    libonig-dev \
-    libzip-dev 
+FROM base as deploy
+COPY --chown=www-data:www-data . /var/www/html
 
-# Очищаем кэш
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /var/www/html
 
-# Устанавливаем расширения PHP
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
-
-# Загружаем актуальную версию Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Создаём пользователя и группу www для приложения Laravel
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
-
-# Копируем содержимое текущего каталога в рабочую директорию
-COPY . /var/www
-COPY --chown=www:www . /var/www
-
-# Меняем пользователя на www
-USER www
-
-# В контейнере открываем 9000 порт и запускаем сервер php-fpm
-EXPOSE 9000
-CMD ["php-fpm"]
+RUN composer install

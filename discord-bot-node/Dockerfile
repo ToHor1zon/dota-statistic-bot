@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:20-alpine
 
 # Установите bash и другие необходимые пакеты
 RUN apk update && apk add bash
