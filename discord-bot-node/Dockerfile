@@ -1,23 +1,23 @@
 FROM node:20-alpine
 
 # Установите bash и другие необходимые пакеты
-RUN apk update && apk add bash
+# RUN apk update && apk add bash
 
 # Установка рабочей директории в контейнере
-WORKDIR /var/www/discord-bot-node
+WORKDIR /usr/src/app
 
 # Копирование зависимостей проекта
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Установка зависимостей
-RUN npm install
+RUN npm ci
 
-RUN npm install -g nodemon
 # Копирование остальных файлов проекта
-COPY . .
+COPY index.js .env ./
+COPY src ./src
 
 # Открытие порта, который будет слушать ваше приложение
 EXPOSE 3000
 
 # Команда для запуска приложения
-CMD ["nodemon", "-L", "index"]
+CMD ["npm", "run", "start"]
