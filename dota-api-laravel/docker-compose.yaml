@@ -4,10 +4,41 @@ services:
     container_name: dsb_php
     ports:
       - 3000:80
+    depends_on:
+      - mysql
     build:
       context: .
+      dockerfile: Dockerfile
     environment:
-      - AUTORUN_LARAVEL_MIGRATION=true
+      PHP_POOL_NAME: "my-app_php"      
+      AUTORUN_LARAVEL_MIGRATION: true
+    networks:
+      - network
+
+  schedule:
+    container_name: dsb_php_schedule
+    restart: always
+    depends_on:
+      - mysql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["su", "root", "-c", "php artisan schedule:work"]
+    environment:
+      PHP_POOL_NAME: "my-app_schedule"
+    networks:
+      - network
+
+  queue:
+    container_name: dsb_php_queue
+    restart: always
+    depends_on:
+      - mysql
+    build:
+      context: .
+    command: ["su", "root", "-c", "php artisan queue:work --tries=3"]
+    environment:
+      PHP_POOL_NAME: "my-app_queue"
     networks:
       - network
 
@@ -26,15 +57,15 @@ services:
       - network
 
   mysql:
-    container_name: dsb_mysql
-    image: mysql:5.7
-    ports:
-      - 33061:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-    networks:
-      - network
+      container_name: dsb_mysql
+      image: mysql:5.7
+      ports:
+        - 3306:3306
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: laravel
+      networks:
+        - network
 
 networks:
   network:

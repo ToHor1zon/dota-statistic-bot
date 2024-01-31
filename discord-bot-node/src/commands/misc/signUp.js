@@ -19,7 +19,7 @@ module.exports = {
 
   callback: async (client, interaction) => {
     try {
-      const url = 'http://nginx:80/api/sign-up'
+      const url = 'http://dsb_php:80/api/sign-up'
       const body = {
         "discordUserName": interaction.user.username,
         "discordUserId": interaction.user.id,

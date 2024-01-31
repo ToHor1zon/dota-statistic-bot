@@ -65,14 +65,20 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+=========================================
 
-### Run commands:
+# При развертывании выполнить 
 
-## UPDATE steamAccount.lastMatchId:
-php artisan steamAccounts:update-data
+## Зайти в контейнер dsb_php
+```console
+docker-compose exec php bash
 
-## RUN queue:
-php artisan queue:work
+or
 
-## RUN schedule:
-php artisan schedule:run
+docker exec -it dsb_php bash
+```
+
+## применить миграции внутри контейнера
+```console
+php artisan migrate
+```
