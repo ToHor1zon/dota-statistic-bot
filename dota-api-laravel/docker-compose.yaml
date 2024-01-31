@@ -2,22 +2,18 @@ version: '3.8'
 services:
   php:
     container_name: dsb_php
-    depends_on:
-      - mysql
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       PHP_POOL_NAME: "my-app_php"
-      AUTORUN_LARAVEL_MIGRATION: true
+      AUTORUN_LARAVEL_MIGRATION: "true"
     networks:
       - network
 
   schedule:
     container_name: dsb_php_schedule
     restart: always
-    depends_on:
-      - mysql
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,8 +26,6 @@ services:
   queue:
     container_name: dsb_php_queue
     restart: always
-    depends_on:
-      - mysql
     build:
       context: .
     command:
@@ -55,15 +49,6 @@ services:
       - ../discord-bot-node:/var/www/discord-bot-node
       - ../discord-bot-node/index.js:/var/www/discord-bot-node/index.js
       - ../discord-bot-node/package.json:/var/www/discord-bot-node/package.json
-    networks:
-      - network
-
-  mysql:
-    container_name: dsb_mysql
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
     networks:
       - network
 
