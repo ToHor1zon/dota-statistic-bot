@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('discord_servers', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('channel_Id');
+            $table->string('channel_id');
+            $table->timestamps();
         });
 
         Schema::create('discord_servers_users', function (Blueprint $table) {
             $table->id();
             $table->string('discord_server_id');
             $table->string('user_id');
+            $table->timestamps();
         });
     }
 
