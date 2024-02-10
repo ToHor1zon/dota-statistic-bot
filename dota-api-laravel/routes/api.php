@@ -28,5 +28,7 @@ Route::resource('steam_accounts', SteamAccountController::class)->except([
     'create', 'edit'
 ]);
 
-
-Route::post('sign-up', [UserController::class, 'signUp']);
+Route::group(['prefix' => 'commands'], function () {
+    Route::post('init', [DiscordServerController::class, 'init']);
+    Route::post('sign-up', [DiscordServerController::class, 'signUp']);
+});

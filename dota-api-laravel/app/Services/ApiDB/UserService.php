@@ -3,60 +3,11 @@
 namespace App\Services\ApiDB;
 
 use App\Models\User;
-use App\Models\SteamAccount;
-
-use App\Services\ApiStratz\SteamAccountService as StratzApiSteamAccountService;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 
 class UserService
 {
-    public static function signUp($req): JsonResponse
-    {
-        $isExistsUser = User::where('id', $req->discordUserId)->exists();
-        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
-
-        if (!$isExistsUser) {
-            self::store([
-                'name' => $req->discordUserName,
-                'discord_id' => $req->discordUserId
-            ]);
-        }
-
-        if ($isExistsSteamAccount) {
-            $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user'])->get();
-
-            if($steamAccount->pluck('user')[0]->discord_id !== $req->discordUserId) {
-                return response()->json([
-                    'message' => 'This SteamAccountId is already registered with another DiscordUserId'
-                ], 409);
-            } else {
-                return response()->json([
-                    'message' => 'You are already registered'
-                ], 409);
-            }
-        } else {
-            $steamAccountData = StratzApiSteamAccountService::getSteamAccountData($req->steamAccountId);
-
-            if (!$steamAccountData) {
-                return response()->json([
-                    'message' => 'Invalid SteamAccountId'
-                ], 409);
-            }
-
-            $steamAccount = SteamAccountService::store([
-                'name' => $steamAccountData['name'],
-                'id' => $steamAccountData['id'],
-                'discord_user_id' => $req->discordUserId,
-            ]);
-
-            return response()->json([
-                'message' => 'You are successfully registered'
-            ], 201);
-        }
-    }
-
     public static function index()
     {
         try {

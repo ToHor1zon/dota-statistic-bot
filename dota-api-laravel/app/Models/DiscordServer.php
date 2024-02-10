@@ -10,6 +10,11 @@ class DiscordServer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id',
+        'channel_id'
+    ];
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'discord_servers_users');

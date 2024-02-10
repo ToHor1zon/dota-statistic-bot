@@ -1,30 +1,17 @@
 const {
-  ApplicationCommandOptionType,
   PermissionFlagsBits,
 } = require('discord.js');
 
 module.exports = {
-  name: 'sign-up',
-  description: 'Registering new user and steam account',
-  // devOnly: Boolean,
-  // testOnly: Boolean,
-  options: [
-    {
-      name: 'steam-account-id',
-      description: 'Your steam account id',
-      required: true,
-      type: ApplicationCommandOptionType.String,
-    },
-  ],
-
+  name: 'init',
+  description: 'Initalizing the bot in the selected channel',
+  permissions: [PermissionFlagsBits.Administrator],
   callback: async (client, interaction) => {
     try {
-      const url = 'http://dsb_php:80/api/sign-up'
+      const url = 'http://dsb_php:80/api/commands/init'
       const body = {
-        "discordUserName": interaction.user.username,
-        "discordUserId": interaction.user.id,
         "discordServerId": interaction.guild.id,
-        "steamAccountId": interaction.options.getString('steam-account-id')
+        "discordChannelId": interaction.channel.id,
       }
       await interaction.deferReply({ ephemeral: true });
 
@@ -37,7 +24,7 @@ module.exports = {
       })
 
       const result = await res.json()
-console.log(result.message);
+
       await interaction.editReply(result.message);
     } catch(e) {
       console.log(e)
