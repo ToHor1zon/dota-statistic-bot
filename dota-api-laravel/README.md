@@ -69,6 +69,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 # При развертывании выполнить 
 
+## для запуска dev версии
+```console
+docker-compose -f docker-compose.dev.yaml up -d
+```
+
 ## Зайти в контейнер dsb_php
 ```console
 docker-compose exec php bash

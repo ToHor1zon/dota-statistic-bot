@@ -8,6 +8,8 @@ services:
     environment:
       PHP_POOL_NAME: "my-app_php"
       AUTORUN_LARAVEL_MIGRATION: "true"
+    ports:
+      - 8080:80
     networks:
       - network
     volumes:
