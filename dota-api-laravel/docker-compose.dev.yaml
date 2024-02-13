@@ -10,10 +10,10 @@ services:
       AUTORUN_LARAVEL_MIGRATION: "true"
     ports:
       - 8080:80
-    networks:
-      - network
     volumes:
       - .:/var/www/html
+    networks:
+      - network
 
   schedule:
     container_name: dsb_php_schedule

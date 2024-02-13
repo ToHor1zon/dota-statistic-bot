@@ -58,6 +58,8 @@ return new class extends Migration
             $table->integer('behavior');
             $table->integer('invisible_seconds');
             $table->integer('dota_plus_hero_xp');
+            $table->string('hero_short_name');
+            $table->string('hero_display_name');
         });
     }
 

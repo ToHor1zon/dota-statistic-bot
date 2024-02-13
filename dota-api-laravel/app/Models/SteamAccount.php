@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use App\Jobs\SaveNewMatchDataFromAPI;
-use App\Models\GameMatch;
-use App\Services\ApiStratz\MatchService as StratzMatchService;
-use App\Services\ApiDB\MatchService as DBMatchService;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SteamAccount extends Model
 {
@@ -24,7 +20,6 @@ class SteamAccount extends Model
     {
         parent::boot();
 
-        Log::info('class SteamAccount extends Model');
         static::updated(function ($model) {
             SaveNewMatchDataFromAPI::dispatch($model->last_match_id);
         });
@@ -33,5 +28,10 @@ class SteamAccount extends Model
     function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'discord_user_id', 'discord_id');
+    }
+
+    function players(): HasMany
+    {
+        return $this->hasMany(Player::class, 'steam_account_id', 'id');
     }
 }

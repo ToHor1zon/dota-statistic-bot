@@ -28,6 +28,8 @@ Route::resource('steam_accounts', SteamAccountController::class)->except([
     'create', 'edit'
 ]);
 
+Route::get('/get-image', [DiscordServerController::class, 'getMatchImage']);
+
 Route::group(['prefix' => 'commands'], function () {
     Route::post('init', [DiscordServerController::class, 'init']);
     Route::post('sign-up', [DiscordServerController::class, 'signUp']);

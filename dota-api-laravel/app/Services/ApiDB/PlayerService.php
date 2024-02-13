@@ -64,6 +64,8 @@ class PlayerService
                     'behavior' => $playerData['behavior'],
                     'invisible_seconds' => $playerData['invisibleSeconds'],
                     'dota_plus_hero_xp' => $playerData['dotaPlusHeroXp'],
+                    'hero_display_name' => $playerData['hero']['displayName'],
+                    'hero_short_name' => $playerData['hero']['shortName'],
                 ]);
     
                 $player->save();

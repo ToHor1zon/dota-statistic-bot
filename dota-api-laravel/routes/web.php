@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +16,5 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-Route::get('/test', function () {
-    // return view('welcome');
-    return DB::getConfig();
-});
+Route::get('/get-match-image', [DiscordServerController::class, 'getMatchImage']);
+Route::get('/get-player-image', [DiscordServerController::class, 'getPlayerImage']);

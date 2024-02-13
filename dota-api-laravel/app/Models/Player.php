@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Player extends Model
 {
@@ -16,6 +17,11 @@ class Player extends Model
     
     function match(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id', 'match_id');
+        return $this->belongsTo(GameMatch::class, 'match_id', 'id');
+    }
+
+    function steamAccount(): HasOne
+    {
+        return $this->hasOne(SteamAccount::class, 'id', 'steam_account_id');
     }
 }

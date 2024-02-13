@@ -19,7 +19,7 @@ module.exports = {
 
   callback: async (client, interaction) => {
     try {
-      const url = 'http://dsb_php:80/api/sign-up'
+      const url = 'http://dsb_php:80/api/commands/sign-up'
       const body = {
         "discordUserName": interaction.user.username,
         "discordUserId": interaction.user.id,
@@ -37,7 +37,7 @@ module.exports = {
       })
 
       const result = await res.json()
-console.log(result.message);
+
       await interaction.editReply(result.message);
     } catch(e) {
       console.log(e)

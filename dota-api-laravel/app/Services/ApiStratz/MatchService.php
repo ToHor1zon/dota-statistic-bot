@@ -13,7 +13,7 @@ class MatchService
         try {
             return QraphQLService::get('
             {
-                match(id: ' . $matchId . ' ) {
+                match(id: ' . $matchId . ') {
                     id
                     statsDateTime
                     durationSeconds
@@ -70,6 +70,10 @@ class MatchService
                         behavior
                         invisibleSeconds
                         dotaPlusHeroXp
+                        hero {
+                            shortName
+                            displayName
+                        }
                     }
                 }
             }
