@@ -133,8 +133,7 @@ class DiscordServerService
 
         $player = Player::find($playerId)->load(['match', 'steamAccount']);
 
-
-        $items = [
+        $itemIds = [
             'item_0_img' => $player['item_0_id'],
             'item_1_img' => $player['item_1_id'],
             'item_2_img' => $player['item_2_id'],
@@ -147,22 +146,14 @@ class DiscordServerService
             'backpack_2_img' => $player['backpack_2_id'],
         ];
 
-        foreach($items as $newKey => $itemId) {
-            if (!$itemId) {
-                continue;
-            }
-
-            $url = ItemService::getItemData($itemId);
-
-            $player[$newKey] = $url['image'] ? 'https://cdn.dota2.com/apps/dota2/images/items/' . $url['image'] : null;
-        }
+        $itemImages = ItemService::getItemData($itemIds);
 
         $player->lane_name = MatchPlayerLaneType::fromValue((int) $player->lane)->description;
         $player->position_name = MatchPlayerPositionNames::fromValue((int) $player->position)->description;
 
-
         return view('player-image', [
             'player' => $player,
+            'items' => $itemImages,
         ]);
     }
 }

@@ -397,30 +397,30 @@
         </div>
         <div class="items">
           <div class="items-normal">
-            <div class="@if($player->item_0_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_0_img }}')"></div>
-            <div class="@if($player->item_1_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_1_img }}')"></div>
-            <div class="@if($player->item_2_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_2_img }}')"></div>
-            <div class="@if($player->item_3_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_3_img }}')"></div>
-            <div class="@if($player->item_4_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_4_img }}')"></div>
-            <div class="@if($player->item_5_img) items-normal__elem @else item--empty @endif"
-              style="background-image: url('{{ $player->item_5_img }}')"></div>
+            <div class="@if($items['item_0_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_0_img'] }}')"></div>
+            <div class="@if($items['item_1_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_1_img'] }}')"></div>
+            <div class="@if($items['item_2_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_2_img'] }}')"></div>
+            <div class="@if($items['item_3_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_3_img'] }}')"></div>
+            <div class="@if($items['item_4_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_4_img'] }}')"></div>
+            <div class="@if($items['item_5_img']) items-normal__elem @else item--empty @endif"
+              style="background-image: url('{{ $items['item_5_img'] }}')"></div>
           </div>
           <div class="items-footer">
             <div class="items-backpack">
-              <div class="items-backpack__elem @if($player->backpack_0_img) @else item--empty @endif"
-                style="background-image: url('{{ $player->backpack_0_img }}')"></div>
-              <div class="items-backpack__elem @if($player->backpack_1_img) @else item--empty @endif"
-                style="background-image: url('{{ $player->backpack_1_img }}')"></div>
-              <div class="items-backpack__elem @if($player->backpack_2_img) @else item--empty @endif"
-                style="background-image: url('{{ $player->backpack_2_img }}')"></div>
+              <div class="items-backpack__elem @if($items['backpack_0_img']) @else item--empty @endif"
+                style="background-image: url('{{ $items['backpack_0_img'] }}')"></div>
+              <div class="items-backpack__elem @if($items['backpack_1_img']) @else item--empty @endif"
+                style="background-image: url('{{ $items['backpack_1_img'] }}')"></div>
+              <div class="items-backpack__elem @if($items['backpack_2_img']) @else item--empty @endif"
+                style="background-image: url('{{ $items['backpack_2_img'] }}')"></div>
             </div>
-            <div class="@if($player->neutral_0_img) items-neutral @else item--empty @endif"
-              style="background-image: url('{{ $player->neutral_0_img }}')"></div>
+            <div class="@if($items['neutral_0_img']) items-neutral @else item--empty @endif"
+              style="background-image: url('{{ $items['neutral_0_img'] }}')"></div>
           </div>
         </div>
       </div>

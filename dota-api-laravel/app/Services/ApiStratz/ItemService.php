@@ -7,18 +7,38 @@ use App\Services\QraphQLService;
 
 class ItemService
 {
-    public static function getItemData(int $itemId)
+    public static function getItemData(array $itemIds)
     {
+        $query = '{
+            constants {
+        ';
+
+        foreach($itemIds as $newKey => $itemId) {
+            if (!$itemId) {
+                continue;
+            }
+
+            $query .= '
+                ' . $newKey . ': item(id: ' . $itemId . ') {
+                    shortName
+                }';
+
+        }
+
+        $query .= '
+            }
+        }';
+        
         try {
-            return QraphQLService::get('
-                {
-                    constants {
-                        item(id: ' . $itemId . ') {
-                            image
-                        }
-                    }
-                }
-            ')['constants']['item'];
+            $res =  QraphQLService::get($query)['constants'];
+
+            $itemImages = [];
+
+            foreach($res as $key => $value) {
+                $itemImages[$key] = $value['shortName'] ? 'https://cdn.stratz.com/images/dota2/items/' . $value['shortName'] . '.png' : null;
+            }
+            
+            return $itemImages;
         } catch (Exception $e) {
             throw $e;
         }
