@@ -48,11 +48,11 @@ services:
     container_name: dsb_node
     build:
       context: ../discord-bot-node
-      dockerfile: ../discord-bot-node/Dockerfile
+      dockerfile: ../discord-bot-node/Dockerfile.dev
     volumes:
       - ../discord-bot-node:/var/www/discord-bot-node
-      - ../discord-bot-node/index.js:/var/www/discord-bot-node/index.js
-      - ../discord-bot-node/package.json:/var/www/discord-bot-node/package.json
+    ports:
+      - 8989:8989
     networks:
       - network
 
