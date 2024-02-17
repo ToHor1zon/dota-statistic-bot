@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from html2image import Html2Image
@@ -10,7 +12,7 @@ async def get_html(request: Request):
     body = await request.json()
     html = body.get('html')
     name = body.get('name')
-    hti = Html2Image(output_path='/media/generated_images/')
+    hti = Html2Image(output_path=os.getcwd() + '/media/generated_images')
     hti.screenshot(html_str=html, save_as=f'{name}.png')
     return JSONResponse({})
 
