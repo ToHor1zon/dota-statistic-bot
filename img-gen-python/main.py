@@ -12,7 +12,7 @@ async def get_html(request: Request):
     body = await request.json()
     html = body.get('html')
     name = body.get('name')
-    hti = Html2Image(output_path=os.getcwd() + '/media/generated_images')
+    hti = Html2Image(output_path=os.getcwd() + '/media/generated_images', custom_flags=['--no-sandbox'])
     hti.screenshot(html_str=html, save_as=f'{name}.png')
     return JSONResponse({})
 

@@ -14,6 +14,8 @@ services:
       - .:/var/www/html
     networks:
       - network
+    # depends_on:
+    #   - mysql
 
   schedule:
     container_name: dsb_php_schedule
@@ -64,6 +66,19 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
+    networks:
+      - network
+
+
+  fastapi:
+    container_name: fastapi_img_gen
+    build:
+      context: ../img-gen-python
+      dockerfile: ../img-gen-python/Dockerfile
+    volumes:
+      - ../img-gen-python/media:/app/media/
+    ports:
+      - 8090:8090
     networks:
       - network
 
