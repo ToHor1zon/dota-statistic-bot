@@ -26,29 +26,40 @@ class DiscordServerService
     public static function signUp(SignUpRequest $req): JsonResponse
     {
         $isExistsUser = User::where('id', $req->discordUserId)->exists();
-        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
-        
 
         if (!$isExistsUser) {
-            UserService::store([
+            $user = UserService::store([
                 'name' => $req->discordUserName,
                 'discord_id' => $req->discordUserId
             ]);
+
+            $server = DiscordServer::find($req->discordServerId);
+
+            $user->discordServers()->attach($server);
         }
 
+        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
+
         if ($isExistsSteamAccount) {
+            // Если SteamAccount существует
+
             $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user'])->get();
 
             if($steamAccount->pluck('user')[0]->discord_id !== $req->discordUserId) {
+                // Если SteamAccount существует и его discord_id отличаются discordUserId пользователя отправившего запрос
+
                 return response()->json([
                     'message' => 'This SteamAccountId is already registered with another DiscordUserId'
                 ], 409);
             } else {
+                // Если SteamAccount существует и его discord_id уже есть в базе
+
                 return response()->json([
                     'message' => 'You are already registered'
                 ], 409);
             }
         } else {
+            // Если SteamAccount не существует
             $steamAccountData = StratzApiSteamAccountService::getSteamAccountData($req->steamAccountId);
 
             if (!$steamAccountData) {
@@ -115,7 +126,11 @@ class DiscordServerService
         $radiantPlayers = Player::where('match_id', $match->id)->where('is_radiant', true)->get()->sortBy('position');
         $direPlayers = Player::where('match_id', $match->id)->where('is_radiant', false)->get()->sortBy('position');
 
-        return view('game-image', [
+        
+        $players = Player::where('match_id', $match->id)->wherePartyId()->load(['match', 'steamAccount']);
+
+
+        return view('finally-image', [
             'match' => $match,
             'radiant_players' => $radiantPlayers,
             'dire_players' => $direPlayers,
@@ -123,6 +138,41 @@ class DiscordServerService
     }
 
     public static function getPlayerImage(Request $req) {
+        $playerId = $req->query('player-id');
+
+        if (!$playerId) {
+            return response()->json([
+                'message' => 'The "player-id" param is not provided'
+            ], 404);
+        }
+
+        $player = Player::find($playerId)->load(['match', 'steamAccount']);
+
+        $itemIds = [
+            'item_0_img' => $player['item_0_id'],
+            'item_1_img' => $player['item_1_id'],
+            'item_2_img' => $player['item_2_id'],
+            'item_3_img' => $player['item_3_id'],
+            'item_4_img' => $player['item_4_id'],
+            'item_5_img' => $player['item_5_id'],
+            'neutral_0_img' => $player['neutral_0_id'],
+            'backpack_0_img' => $player['backpack_0_id'],
+            'backpack_1_img' => $player['backpack_1_id'],
+            'backpack_2_img' => $player['backpack_2_id'],
+        ];
+
+        $itemImages = ItemService::getItemData($itemIds);
+
+        $player->lane_name = MatchPlayerLaneType::fromValue((int) $player->lane)->description;
+        $player->position_name = MatchPlayerPositionNames::fromValue((int) $player->position)->description;
+
+        return view('player-image', [
+            'player' => $player,
+            'items' => $itemImages,
+        ]);
+    }
+
+    public static function getFinallyImage(Request $req) {
         $playerId = $req->query('player-id');
 
         if (!$playerId) {
