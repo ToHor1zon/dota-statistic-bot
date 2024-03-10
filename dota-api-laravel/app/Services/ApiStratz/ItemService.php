@@ -14,12 +14,8 @@ class ItemService
         ';
 
         foreach($itemIds as $newKey => $itemId) {
-            if (!$itemId) {
-                continue;
-            }
-
             $query .= '
-                ' . $newKey . ': item(id: ' . $itemId . ') {
+                ' . $newKey . ': item(id: ' . (int) $itemId . ') {
                     shortName
                 }';
 
@@ -35,7 +31,11 @@ class ItemService
             $itemImages = [];
 
             foreach($res as $key => $value) {
-                $itemImages[$key] = $value['shortName'] ? 'https://cdn.stratz.com/images/dota2/items/' . $value['shortName'] . '.png' : null;
+                if(!$value) {
+                    $itemImages[$key] = null;
+                } else {
+                    $itemImages[$key] = $value['shortName'] ? 'https://cdn.stratz.com/images/dota2/items/' . $value['shortName'] . '.png' : null;
+                }
             }
             
             return $itemImages;

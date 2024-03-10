@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Illuminate\Support\Facades\Log;
+
 class SteamAccount extends Model
 {
     protected $fillable = [
@@ -16,12 +18,12 @@ class SteamAccount extends Model
         'last_match_id',
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
+        parent::booted();
 
         static::updated(function ($model) {
-            SaveNewMatchDataFromAPI::dispatch($model->last_match_id);
+           SaveNewMatchDataFromAPI::dispatch($model->last_match_id, $model->id);
         });
     }
 

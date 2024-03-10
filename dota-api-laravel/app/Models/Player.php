@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,11 @@ class Player extends Model
     function match(): BelongsTo
     {
         return $this->belongsTo(GameMatch::class, 'match_id', 'id');
+    }
+    
+    function wherePartyId($query, int $partyId): Builder
+    {
+        return $query->where('party_id', $partyId);
     }
 
     function steamAccount(): HasOne

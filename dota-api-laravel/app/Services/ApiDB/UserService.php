@@ -26,10 +26,10 @@ class UserService
 
         try {
             $user->save();
-            
+
             return $user;
         } catch (Exception $e) {
-            return $e;
+            throw $e;
         }
     }
 

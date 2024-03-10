@@ -8,13 +8,17 @@ import {
   Interaction,
   REST,
   Routes,
-  Snowflake
+  Snowflake,
+  TextChannel,
+  AttachmentBuilder,
+  BufferResolvable 
 } from "discord.js";
-import { readdirSync } from "fs";
-import { join } from "path";
+
 import { config } from '../utils/config';
 import { Command } from "../interfaces/Command";
 import { Logger } from "../utils/logger";
+import BFFServer from "../BFFServer";
+
 import localCommands from '../commands'
 import { PermissionResult, checkPermissions } from "../utils/checkPermission";
 
@@ -31,13 +35,13 @@ export class Bot {
 
     this.client.on("ready", () => {
       this.logger.log(`${this.client.user!.username} ready!`);
-
       this.registerSlashCommands();
     });
 
     this.client.on("warn", (info) => this.logger.log(info));
     this.client.on("error", this.logger.error);
 
+    this.registerBFFServer();
     this.onInteractionCreate();
   }
 
@@ -50,6 +54,24 @@ export class Bot {
     }
 
     await rest.put(Routes.applicationCommands(this.client.user!.id), { body: this.slashCommands });
+  }
+
+  private async registerBFFServer() {
+    await BFFServer(this.client, this)
+    this.logger.log('BFF Server ready!');
+  }
+
+  public async sendImage(discordChannelId: string, file: BufferResolvable, fileName: string) {
+    const channel = this.client.channels.cache.get(discordChannelId) as TextChannel;;
+
+    if (!channel) return console.error('Invalid channel ID.');
+
+    channel.send({
+      files: [{
+        attachment: file,
+        name: fileName,
+      }]
+    })
   }
 
   private async onInteractionCreate() {

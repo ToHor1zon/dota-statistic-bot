@@ -1,5 +1,16 @@
 version: '3.8'
 services:
+  mysql:
+    container_name: dsb_mysql
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+    networks:
+      - network
+
   php:
     container_name: dsb_php
     build:
@@ -14,8 +25,6 @@ services:
       - .:/var/www/html
     networks:
       - network
-    # depends_on:
-    #   - mysql
 
   schedule:
     container_name: dsb_php_schedule
@@ -47,7 +56,7 @@ services:
       - network
 
   node:
-    container_name: dsb_node
+    container_name: dsb_node_bot
     build:
       context: ../discord-bot-node
       dockerfile: ../discord-bot-node/Dockerfile.dev
@@ -58,25 +67,13 @@ services:
     networks:
       - network
 
-  mysql:
-    container_name: dsb_mysql
-    image: mysql:5.7
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-    networks:
-      - network
-
-
-  fastapi:
-    container_name: fastapi_img_gen
+  img_gen_node:
+    container_name: dsb_img_gen_node
     build:
-      context: ../img-gen-python
-      dockerfile: ../img-gen-python/Dockerfile
+      context: ../img-gen-node
+      dockerfile: ../img-gen-node/Dockerfile.dev
     volumes:
-      - ../img-gen-python/media:/app/media/
+      - ../img-gen-node:/usr/src/app
     ports:
       - 8090:8090
     networks:
