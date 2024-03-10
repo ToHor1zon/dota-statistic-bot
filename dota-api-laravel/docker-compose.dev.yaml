@@ -1,16 +1,5 @@
 version: '3.8'
 services:
-  mysql:
-    container_name: dsb_mysql
-    image: mysql:5.7
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-    networks:
-      - network
-
   php:
     container_name: dsb_php
     build:
@@ -19,8 +8,6 @@ services:
     environment:
       PHP_POOL_NAME: "my-app_php"
       AUTORUN_LARAVEL_MIGRATION: "true"
-    ports:
-      - 8080:80
     volumes:
       - .:/var/www/html
     networks:
@@ -55,15 +42,13 @@ services:
     networks:
       - network
 
-  node:
-    container_name: dsb_node_bot
+  bot_node:
+    container_name: dsb_bot_node
     build:
       context: ../discord-bot-node
-      dockerfile: ../discord-bot-node/Dockerfile.dev
-    volumes:
-      - ../discord-bot-node:/var/www/discord-bot-node
+      dockerfile: ../discord-bot-node/Dockerfile
     ports:
-      - 8989:8989
+      - 8020:8020
     networks:
       - network
 
@@ -71,11 +56,9 @@ services:
     container_name: dsb_img_gen_node
     build:
       context: ../img-gen-node
-      dockerfile: ../img-gen-node/Dockerfile.dev
-    volumes:
-      - ../img-gen-node:/usr/src/app
+      dockerfile: ../img-gen-node/Dockerfile
     ports:
-      - 8090:8090
+      - 8010:8010
     networks:
       - network
 

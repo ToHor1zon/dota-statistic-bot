@@ -23,6 +23,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # Copy handler function and tsconfig
+COPY .env ./
 COPY server.js ./
 
 # Expose app

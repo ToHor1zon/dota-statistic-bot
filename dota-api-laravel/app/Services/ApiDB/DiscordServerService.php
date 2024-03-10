@@ -22,6 +22,7 @@ use App\Http\Requests\Commands\InitRequest;
 use App\Http\Requests\Commands\SignUpRequest;
 use App\Services\ApiStratz\ItemService;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class DiscordServerService
@@ -211,7 +212,11 @@ class DiscordServerService
 
         $data = Response::json($discordServerData);
 
-        Http::post('http://' . config('api.dsb_img_gen_node') . '/generate-image', $data);
+        Log::info('Generated data', ['data' => $data]);
+
+        $url = config('api.dsb_img_gen_url');
+        $port = config('api.dsb_img_gen_port');
+
+        Http::post("http://{$url}:{$port}/generate-image", $data);
     }
 }
-
