@@ -11,7 +11,7 @@ try {
     BOT_CLIENT_ID: process.env.DISCORD_BOT_CLIENT_ID || '',
     API_URL: process.env.API_URL || '',
     API_PORT: process.env.API_PORT || '8080',
-    BFF_SERVER_URL: process.env.BFF_SERVER_URL || '8020',
+    BFF_SERVER_PORT: process.env.BFF_SERVER_PORT || '8020',
   };
 }
 

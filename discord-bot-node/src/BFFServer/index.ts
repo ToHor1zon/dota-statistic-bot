@@ -8,7 +8,7 @@ import { config } from '../utils/config'
 export default async (discordClient: Client, botInstance: Bot) => {
     const app = express()
     const upload = multer();
-    const port = config.BFF_SERVER_URL
+    const port = config.BFF_SERVER_PORT
 
     app.post('/send-image', upload.single('image'), async (req: express.Request, res: express.Response) => {
         const file = req.file
