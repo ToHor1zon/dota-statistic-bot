@@ -17,6 +17,8 @@ COPY .env ./
 COPY ./tsconfig.json ./
 COPY src ./src
 
+RUN npm run build
+
 # Открытие порта, который будет слушать ваше приложение
 EXPOSE 3000
 

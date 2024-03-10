@@ -20,7 +20,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 # Install NPM dependencies for function
-RUN npm install
+RUN npm ci
 
 # Copy handler function and tsconfig
 COPY server.js ./
