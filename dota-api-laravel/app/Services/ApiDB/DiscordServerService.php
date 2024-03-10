@@ -11,44 +11,58 @@ use App\Models\Player;
 use App\Enums\MatchPlayerLaneType;
 use App\Enums\MatchPlayerPositionNames;
 
-use Illuminate\Http\JsonResponse;
 
 use App\Services\ApiStratz\SteamAccountService as StratzApiSteamAccountService;
 
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
 use App\Http\Requests\Commands\InitRequest;
 use App\Http\Requests\Commands\SignUpRequest;
 use App\Services\ApiStratz\ItemService;
-use Exception;
+
+use Illuminate\Support\Facades\Http;
 
 class DiscordServerService
 {
     public static function signUp(SignUpRequest $req): JsonResponse
     {
-        $isExistsUser = User::where('id', $req->discordUserId)->exists();
-        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
-        
+        $isExistsUser = User::where('discord_id', $req->discordUserId)->exists();
 
         if (!$isExistsUser) {
-            UserService::store([
+            $user = UserService::store([
                 'name' => $req->discordUserName,
                 'discord_id' => $req->discordUserId
             ]);
+
+            $server = DiscordServer::find($req->discordServerId);
+
+            $user->discordServers()->attach($server);
         }
 
+        $isExistsSteamAccount = SteamAccount::where('id', $req->steamAccountId)->exists();
+
         if ($isExistsSteamAccount) {
+            // Если SteamAccount существует
+
             $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user'])->get();
 
             if($steamAccount->pluck('user')[0]->discord_id !== $req->discordUserId) {
+                // Если SteamAccount существует и его discord_id отличаются discordUserId пользователя отправившего запрос
+
                 return response()->json([
                     'message' => 'This SteamAccountId is already registered with another DiscordUserId'
                 ], 409);
             } else {
+                // Если SteamAccount существует и его discord_id уже есть в базе
+
                 return response()->json([
                     'message' => 'You are already registered'
                 ], 409);
             }
         } else {
+            // Если SteamAccount не существует
             $steamAccountData = StratzApiSteamAccountService::getSteamAccountData($req->steamAccountId);
 
             if (!$steamAccountData) {
@@ -100,26 +114,11 @@ class DiscordServerService
     }
 
     public static function getMatchImage(Request $req) {
-        $matchId = $req->query('match-id');
+        $data = self::generateMatchData($req->query('match-id'));
 
-        if (!$matchId) {
-            return response()->json([
-                'message' => 'The "match-id" param is not provided'
-            ], 404);
+        foreach($data as $key => $value) {
+            return response($data[$key]['html']);
         }
-
-        $match = GameMatch::where('id', $matchId)->with(['players'])
-            ->first()
-            ->append(['match_type', 'duration_formated']);
-
-        $radiantPlayers = Player::where('match_id', $match->id)->where('is_radiant', true)->get()->sortBy('position');
-        $direPlayers = Player::where('match_id', $match->id)->where('is_radiant', false)->get()->sortBy('position');
-
-        return view('game-image', [
-            'match' => $match,
-            'radiant_players' => $radiantPlayers,
-            'dire_players' => $direPlayers,
-        ]);
     }
 
     public static function getPlayerImage(Request $req) {
@@ -155,6 +154,64 @@ class DiscordServerService
             'player' => $player,
             'items' => $itemImages,
         ]);
+    }
+
+    private static function generateMatchData(int $matchId) {
+        $discordServerData = [];
+
+        $discordServers = DiscordServer::whereHas('users.steamAccounts.players', fn ($q) => $q->where('match_id', $matchId))->get();
+
+        foreach ($discordServers as $discordServer) {
+            $discordServerId = $discordServer->id;
+            $discordChannelId = $discordServer->channel_id;
+
+            $discordServerData["{$discordServerId}_{$discordChannelId}"] = [
+                'match' => GameMatch::find($matchId),
+                'players' => [
+                    'radiant' => Player::where('match_id', $matchId)->where('is_radiant', true)->get()->sortBy('position'),
+                    'dire' => Player::where('match_id', $matchId)->where('is_radiant', false)->get()->sortBy('position'),
+                    'detailPlayers' => Player::where('match_id', $matchId)->whereHas('steamAccount.user.discordServers', fn ($q) => $q->where('discord_servers.id', $discordServerId))->get(),
+                ]
+            ];
+        }
+
+        foreach($discordServerData as $key => $data) {
+            foreach($data['players']['detailPlayers'] as $player) {
+                $itemIds = [
+                    'item_0_img' => $player['item_0_id'],
+                    'item_1_img' => $player['item_1_id'],
+                    'item_2_img' => $player['item_2_id'],
+                    'item_3_img' => $player['item_3_id'],
+                    'item_4_img' => $player['item_4_id'],
+                    'item_5_img' => $player['item_5_id'],
+                    'neutral_0_img' => $player['neutral_0_id'],
+                    'backpack_0_img' => $player['backpack_0_id'],
+                    'backpack_1_img' => $player['backpack_1_id'],
+                    'backpack_2_img' => $player['backpack_2_id'],
+                ];
+    
+                $itemImages = ItemService::getItemData($itemIds);
+                $player['items'] = $itemImages;
+            }
+
+            $discordServerData[$key]['html'] = view('finally-image', [
+                'match' => $data['match'],
+                'players' => $data['players'],
+            ])->render();
+
+            // Высота инфо о матче 467px, высота инфы о каждом игроке 184px, отступы между блоками 7px
+            $discordServerData[$key]['size'] = [ 'width' => 915, 'height' => 467 + (184 + 7) * count($data['players']['detailPlayers'])];
+        }
+
+        return $discordServerData;
+    }
+
+    public static function sendFinallyImage(int $matchId) {
+        $discordServerData = self::generateMatchData($matchId);
+
+        $data = Response::json($discordServerData);
+
+        Http::post('http://' . config('api.dsb_img_gen_node') . '/generate-image', $data);
     }
 }
 

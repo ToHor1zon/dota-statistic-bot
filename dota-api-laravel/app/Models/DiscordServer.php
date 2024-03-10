@@ -17,6 +17,6 @@ class DiscordServer extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'discord_servers_users');
+        return $this->belongsToMany(User::class, 'discord_servers_users', 'discord_server_id', 'user_id', 'id', 'id');
     }
 }

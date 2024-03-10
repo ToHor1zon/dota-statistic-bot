@@ -8,6 +8,8 @@ services:
     environment:
       PHP_POOL_NAME: "my-app_php"
       AUTORUN_LARAVEL_MIGRATION: "true"
+    volumes:
+      - .:/var/www/html
     networks:
       - network
 
@@ -40,15 +42,19 @@ services:
     networks:
       - network
 
-  node:
-    container_name: dsb_node
+  bot_node:
+    container_name: dsb_bot_node
     build:
       context: ../discord-bot-node
       dockerfile: ../discord-bot-node/Dockerfile
-    volumes:
-      - ../discord-bot-node:/var/www/discord-bot-node
-      - ../discord-bot-node/index.js:/var/www/discord-bot-node/index.js
-      - ../discord-bot-node/package.json:/var/www/discord-bot-node/package.json
+    networks:
+      - network
+
+  img_gen_node:
+    container_name: dsb_img_gen_node
+    build:
+      context: ../img-gen-node
+      dockerfile: ../img-gen-node/Dockerfile
     networks:
       - network
 

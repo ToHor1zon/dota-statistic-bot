@@ -1,0 +1,30 @@
+# Файлы с настройками проекта
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# Локальные конфигурации
+*.env
+
+# Папки с собранным кодом или временными файлами сборки
+dist/
+build/
+out/
+
+# Логи и временные файлы
+*.log
+*.swp
+*.tmp
+
+# VS Code
+.vscode/
+
+# WebStorm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

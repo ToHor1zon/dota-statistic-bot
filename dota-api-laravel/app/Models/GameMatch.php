@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 use App\Enums\GameModeType as GameModeTypeEnum;
+use App\Jobs\GenerateMatchImage;
+
+use Illuminate\Support\Facades\Log;
 
 class GameMatch extends Model
 {
@@ -16,6 +19,21 @@ class GameMatch extends Model
     protected $table = 'matches';
 
     protected $guarded = [];
+
+    public $incrementing = false;
+    
+    protected static function booted()
+    {
+        static::created(function (GameMatch $model) {
+            Log::info('GameModel $model:', $model->toArray());
+            try {
+                Log::info('Hook created() is called for model ' . get_class($model) . ' with ID ' . $model->id);
+                GenerateMatchImage::dispatch($model->id);
+            } catch (\Error $e) {
+                Log::error($e);
+            }
+        });
+    }
 
     public function matchType(): Attribute
     {
@@ -27,11 +45,12 @@ class GameMatch extends Model
     public function durationFormated(): Attribute
     {
         $duration = $this->duration;
-        $minutes = floor($duration / 60);
-        $remainderSeconds = $duration % 60;
+
+        $time_in_minutes = gmdate("i:s", $duration); // Преобразование секунд в формат минут:секунд
+        [ $minutes, $seconds ] = explode(':', $time_in_minutes);
 
         return new Attribute(
-            get: fn () => "{$minutes}:{$remainderSeconds}",
+            get: fn () => sprintf('%02d:%02d', $minutes, $seconds),
         );  
     }
 
@@ -42,6 +61,6 @@ class GameMatch extends Model
     
     function players(): HasMany
     {
-        return $this->hasMany(Player::class, 'id', 'match_id');
+        return $this->hasMany(Player::class, 'match_id', 'id');
     }
 }

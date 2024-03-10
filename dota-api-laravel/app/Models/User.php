@@ -20,6 +20,6 @@ class User extends Authenticatable
 
     public function discordServers(): BelongsToMany
     {
-        return $this->belongsToMany(DiscordServer::class, 'discord_servers_users');
+        return $this->belongsToMany(DiscordServer::class, 'discord_servers_users', 'user_id', 'discord_server_id', 'id', 'id');
     }
 }

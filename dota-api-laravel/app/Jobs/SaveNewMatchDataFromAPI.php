@@ -20,13 +20,15 @@ class SaveNewMatchDataFromAPI implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $matchId;
+    public $steamAccountId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(int $matchId)
+    public function __construct(int $matchId, int $steamAccountId)
     {
         $this->matchId = $matchId;
+        $this->steamAccountId = $steamAccountId;
     }
 
     /**
@@ -42,10 +44,9 @@ class SaveNewMatchDataFromAPI implements ShouldQueue
             if (!$hasMatch) {
                 $matchData = StratzMatchService::getMatchData($this->matchId);
 
-                Log::info(json_encode($matchData));
-
-                DBMatchService::store($matchData);
+                Log::info(json_encode($matchData['players']));
                 DBPlayerService::store($matchData['players']);
+                DBMatchService::store($matchData);
 
                 Log::info('Match ' . $matchData['id'] . ' and players successfully saved');
             }

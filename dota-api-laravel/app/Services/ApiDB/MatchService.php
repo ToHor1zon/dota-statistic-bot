@@ -15,7 +15,7 @@ class MatchService
     public static function store(array $matchData)
     {
         try {
-            $match = GameMatch::make([
+            $match = GameMatch::create([
                 'id' => $matchData['id'],
                 'did_radiant_win' => $matchData['didRadiantWin'],
                 'duration' => $matchData['durationSeconds'],
@@ -27,7 +27,6 @@ class MatchService
                 'dire_kills_count' => array_sum($matchData['direKills']),
             ]);
 
-            $match->save();
             Log::info('Match with id: ' . $match->id . ' successfully created');
         } catch (Exception $e) {
             Log::error($e);

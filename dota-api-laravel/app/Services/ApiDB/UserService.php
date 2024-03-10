@@ -17,7 +17,7 @@ class UserService
         }
     }
 
-    public static function store(array $reqParams)
+    public static function store(array $reqParams): User
     {
         $user = User::make([
             'name' => $reqParams['name'],
@@ -26,10 +26,10 @@ class UserService
 
         try {
             $user->save();
-            
-            return response('User ' . $reqParams['name'] . ' успешно создан', 201);
+
+            return $user;
         } catch (Exception $e) {
-            return $e;
+            throw $e;
         }
     }
 
