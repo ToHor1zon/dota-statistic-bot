@@ -3,7 +3,11 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const bodyParser = require('body-parser');
 
+require('dotenv').config()
+
 const app = express();
+
+const port = process.env.IMG_GEN_SERVER_PORT
 
 app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -46,7 +50,7 @@ app.post('/generate-image', async (req, res) => {
         const formData = new FormData();
         formData.append('image', imageBlob, fileName);
 
-        await fetch('http://dsb_node_bot:8989/send-image', {
+        await fetch(`http://${process.env.BOT_API_URL}:${process.env.BOT_API_PORT}/send-image`, {
             method: 'POST',
             body: formData,
         })
@@ -56,6 +60,6 @@ app.post('/generate-image', async (req, res) => {
     res.sendStatus(200)
 });
 
-app.listen(8090, () => {
-    console.log('Listening on port 8090');
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
 });

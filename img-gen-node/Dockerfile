@@ -26,7 +26,7 @@ RUN npm ci
 COPY server.js ./
 
 # Expose app
-EXPOSE 8090
+EXPOSE $IMG_GEN_SERVER_PORT
 
 # Run app
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]
