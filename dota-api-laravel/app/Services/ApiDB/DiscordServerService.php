@@ -30,14 +30,19 @@ class DiscordServerService
     public static function signUp(SignUpRequest $req): JsonResponse
     {
         $isExistsUser = User::where('discord_id', $req->discordUserId)->exists();
+        $server = DiscordServer::find($req->discordServerId);
+
+        if (!$server) {
+            return response()->json([
+                'message' => 'This server is not registered'
+            ], 409);
+        }
 
         if (!$isExistsUser) {
             $user = UserService::store([
                 'name' => $req->discordUserName,
                 'discord_id' => $req->discordUserId
             ]);
-
-            $server = DiscordServer::find($req->discordServerId);
 
             $user->discordServers()->attach($server);
         }
@@ -47,7 +52,19 @@ class DiscordServerService
         if ($isExistsSteamAccount) {
             // Если SteamAccount существует
 
-            $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user'])->get();
+            $steamAccount = SteamAccount::where('id', $req->steamAccountId)->with(['user', 'user.discordServers'])->first();
+
+            $discordServers = $steamAccount->user->discordServers->pluck('id')->toArray();
+
+            if(!in_array($req->discordServerId, $discordServers)) {
+                // Если пользователь еще не зарегистрирован на сервере с таким discordServerId 
+
+                $steamAccount->user->discordServers()->attach($server);
+
+                return response()->json([
+                    'message' => 'You are successfully registered'
+                ], 201);
+            }
 
             if($steamAccount->pluck('user')[0]->discord_id !== $req->discordUserId) {
                 // Если SteamAccount существует и его discord_id отличаются discordUserId пользователя отправившего запрос

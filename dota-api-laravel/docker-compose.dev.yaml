@@ -10,6 +10,8 @@ services:
       AUTORUN_LARAVEL_MIGRATION: "true"
     volumes:
       - .:/var/www/html
+    ports:
+      - 80:80
     networks:
       - network
 
