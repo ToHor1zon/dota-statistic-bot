@@ -29,6 +29,7 @@ jobs:
             mv dsb_fresh dsb;
             cp envs/dsb.node.env dsb/discord-bot-node/.env;
             cp envs/dsb.php.env dsb/dota-api-laravel/.env;
+            cp envs/dsb.img-gen.env dsb/img-gen-node/.env;
             cd dsb/dota-api-laravel;
             docker compose build --no-cache;
             docker compose up -d --remove-orphans;
