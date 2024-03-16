@@ -18,4 +18,3 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/get-match-image', [DiscordServerController::class, 'getMatchImage']);
 Route::get('/get-player-image', [DiscordServerController::class, 'getPlayerImage']);
-Route::get('/get-finally-image', [DiscordServerController::class, 'getFoo']);

@@ -157,12 +157,12 @@
     position: absolute;
     top: 1px;
     height: 6px;
-    max-width: 30px;
+    max-width: 29px;
 }
 
 .impact__value--positive {
     background: linear-gradient(135deg, rgb(255 252 38), rgb(188 153 0), rgb(255 252 38));
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 3px 3px 0;
 }
 
 .impact__value--negative {
