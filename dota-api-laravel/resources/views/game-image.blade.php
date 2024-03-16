@@ -56,13 +56,17 @@
                             class="radiant-hero__image">
 
                         <div class="impact__bar">
-                            <div class="impact__value @if ($player->imp > 0) impact__value--positive @else impact__value--negative @endif"
+                            <div
+                                class="impact__value @if ($player->imp > 0) impact__value--positive @else impact__value--negative @endif"
                                 style="
-                                @if ($player->imp > 0) right: calc(50% - @if(abs($player->imp) >= 30) 29px @else {{abs($player->imp)}}px @endif);
-                                @else
-                                    left: calc(50% - {{ abs($player->imp) }}px); @endif
-                                width: {{ abs($player->imp) }}px;
-                            ">
+                                    @if ($player->imp > 0)
+                                        right: calc(50% - @if(abs($player->imp) >= 30) 29px @else {{abs($player->imp)}}px @endif);
+                                    @else
+                                        left: calc(50% - @if(abs($player->imp) >= 30) 29px @else {{abs($player->imp)}}px @endif);
+                                    @endif
+                                    width: {{ abs($player->imp) }}px;
+                                "
+                            >
                             </div>
                         </div>
                         <span class="impact-value">{{ $player->imp }}</span>
@@ -190,13 +194,17 @@
                             class="dire-hero__image">
 
                         <div class="impact__bar">
-                            <div class="impact__value @if ($player->imp > 0) impact__value--positive @else impact__value--negative @endif"
+                            <div
+                                class="impact__value @if ($player->imp > 0) impact__value--positive @else impact__value--negative @endif"
                                 style="
-                                @if ($player->imp > 0) right: calc(50% - {{ abs($player->imp) }}px);
-                                @else
-                                    left: calc(50% - {{ abs($player->imp) }}px); @endif
-                                width: {{ abs($player->imp) }}px;
-                            ">
+                                    @if ($player->imp > 0)
+                                        right: calc(50% - @if(abs($player->imp) >= 30) 29px @else {{abs($player->imp)}}px @endif);
+                                    @else
+                                        left: calc(50% - @if(abs($player->imp) >= 30) 29px @else {{abs($player->imp)}}px @endif);
+                                    @endif
+                                    width: {{ abs($player->imp) }}px;
+                                "
+                            >
                             </div>
                         </div>
                         <span class="impact-value">{{ $player->imp }}</span>
