@@ -45,11 +45,12 @@
                 @foreach ($players['radiant'] as $player)
                     <div
                         class="radiant-hero
-                        @if ($player->award === 3) award--top-suport
-                        @elseif($player->award === 2)
-                        award--top-core
-                        @elseif($player->award === 1)
-                        award--mvp @endif
+                        @if ($player->award == 3)
+                            award--top-suport
+                        @elseif($player->award == 2)
+                            award--top-core
+                        @elseif($player->award == 1)
+                            award--mvp @endif
                     ">
                         <img src="https://cdn.stratz.com/images/dota2/heroes/{{ $player->hero_short_name }}_horz.png"
                             class="radiant-hero__image">
@@ -178,11 +179,12 @@
                 @foreach ($players['dire'] as $player)
                     <div
                         class="dire-hero
-                        @if ($player->award === 3) award--top-suport
-                        @elseif($player->award === 2)
-                        award--top-core
-                        @elseif($player->award === 1)
-                        award--mvp @endif
+                        @if ($player->award == 3)
+                            award--top-suport
+                        @elseif($player->award == 2)
+                            award--top-core
+                        @elseif($player->award == 1)
+                            award--mvp @endif
                     ">
                         <img src="https://cdn.stratz.com/images/dota2/heroes/{{ $player->hero_short_name }}_horz.png"
                             class="dire-hero__image">
