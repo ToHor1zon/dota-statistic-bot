@@ -25,6 +25,9 @@ class MatchService
                     rank
                     radiantKills
                     direKills
+                    bottomLaneOutcome
+                    midLaneOutcome
+                    topLaneOutcome
                     players {
                         matchId
                         playerSlot

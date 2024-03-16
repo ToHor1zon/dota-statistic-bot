@@ -274,5 +274,6 @@
 .hero-stats-item--value {
     font-weight: 500;
     letter-spacing: 0.042em;
+    text-transform: capitalize;
 }
 </style>

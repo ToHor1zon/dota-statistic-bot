@@ -10,6 +10,7 @@ use App\Models\Player;
 
 use App\Enums\MatchPlayerLaneType;
 use App\Enums\MatchPlayerPositionNames;
+use App\Enums\MatchLaneOutcomeType;
 
 
 use App\Services\ApiStratz\SteamAccountService as StratzApiSteamAccountService;
@@ -210,6 +211,33 @@ class DiscordServerService
     
                 $itemImages = ItemService::getItemData($itemIds);
                 $player['items'] = $itemImages;
+
+                if(in_array($player->lane, [1, 2, 3])) {
+                    $laneOutcomesOptions = [1 => 'mid_lane_outcome', 2 => 'bottom_lane_outcome', 3 => 'top_lane_outcome'];
+
+                    $resultOutcome = GameMatch::find($player['match_id'])[$laneOutcomesOptions[$player->lane]];
+
+                    if($resultOutcome != 0) {
+                        [$team, $result] = explode('_', MatchLaneOutcomeType::fromValue((int) $resultOutcome)->key);
+
+                        $isStomp = $result === 'STOMP';
+                        $isWin = $player['is_radiant'] && $team === 'RADIANT';
+                        $result = $isWin ? 'win' : 'lose';
+
+                        $player['outcomes'] = [
+                            'value' => $isStomp ?  "Stomp {$result}" : $result,
+                            'isWin' => $isWin,
+                        ];
+                    } else {
+                        $player['outcomes'] = [
+                            'value' => 'Draw',
+                            'isTie' => true,
+                        ];
+                    }
+                }
+
+                $player['lane_name'] = MatchPlayerLaneType::fromValue((int) $player->lane)->description;
+                $player['position_name'] = MatchPlayerPositionNames::fromValue((int) $player->position)->description;
             }
 
             $discordServerData[$key]['html'] = view('finally-image', [

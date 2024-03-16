@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Enums\LobbyType as LobbyTypeEnum;
 use App\Enums\GameModeType as GameModeTypeEnum;
+use App\Enums\MatchLaneOutcomeType as MatchLaneOutcomeEnum;
 
 class MatchService
 {
@@ -25,6 +26,9 @@ class MatchService
                 'rank' => $matchData['rank'],
                 'radiant_kills_count' => array_sum($matchData['radiantKills']),
                 'dire_kills_count' => array_sum($matchData['direKills']),
+                'bottom_lane_outcome' => MatchLaneOutcomeEnum::fromKey($matchData['bottomLaneOutcome']),
+                'mid_lane_outcome' => MatchLaneOutcomeEnum::fromKey($matchData['midLaneOutcome']),
+                'top_lane_outcome' => MatchLaneOutcomeEnum::fromKey($matchData['topLaneOutcome']),
             ]);
 
             Log::info('Match with id: ' . $match->id . ' successfully created');

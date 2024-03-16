@@ -73,20 +73,22 @@
                         <span class="hero-stats-item--divider hero-stats-item--alias">/</span>
                         <span class="hero-stats-item--value">{{ $player->experience_per_minute }}</span>
                     </div>
-                    <div class="hero-stats-item hero-stats-item--lane-result">
-                        <span class="hero-stats-item--alias">{{ $player->lane_name }}</span>
-                        {{-- <span
-                            class="
-                                hero-stats-item--value
-                                {{@if laneResult.isWin}}
-                                hero-lane-result--win
-                                {{else if laneResult.isLose}}
-                                hero-lane-result--lose
-                                {{/if}}
-                            ">
-                            {{ laneResult.result }}
-                        </span> --}}
-                    </div>
+                    @if($player->outcomes)
+                        <div class="hero-stats-item hero-stats-item--lane-result">
+                            <span class="hero-stats-item--alias">{{ $player->lane_name }}</span>
+                            <span
+                                class="
+                                    hero-stats-item--value
+                                    @if ($player->outcomes['isWin'])
+                                        hero-lane-result--win
+                                    @else
+                                        hero-lane-result--lose
+                                    @endif
+                                ">
+                                {{ $player->outcomes['value'] }}
+                            </span>
+                        </div>
+                    @endif
                     <div class="hero-stats-item hero-stats-item--hero-damage">
                         <span class="hero-stats-item--alias">Hero Damage</span>
                         <span
