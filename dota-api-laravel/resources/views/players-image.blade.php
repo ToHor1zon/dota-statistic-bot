@@ -3,7 +3,7 @@
         <div class="hero">
             <div class="hero-img">
                 <img class="hero-img__item"
-                    src="https://cdn.dota2.com/apps/dota2/images/heroes/{{ $player->hero_short_name }}_full.png"
+                    src="https://cdn.stratz.com/images/dota2/heroes/{{ $player->hero_short_name }}_horz.png"
                     alt="{{ $player->hero_display_name }}">
                 <div class="hero-info">
                     <div class="hero-main">
@@ -17,11 +17,11 @@
         <div class="player__main">
             <header class="player-header">
                 {{-- <div class="player-header-rank">
-          <img class="player-header-rank__medal"
-            src="https://cdn.stratz.com/images/dota2/seasonal_rank/medal_{{ substr($player->steamAccount->rank, 0, 1) }}.png" alt="">
-          <img class="player-header-rank__stars"
-            src="https://cdn.stratz.com/images/dota2/seasonal_rank/star_{{ substr($player->steamAccount->rank, 1, 2) }}.png" alt="">
-        </div> --}}
+                    <img class="player-header-rank__medal"
+                        src="https://cdn.stratz.com/images/dota2/seasonal_rank/medal_{{ substr($player->steamAccount->rank, 0, 1) }}.png" alt="">
+                    <img class="player-header-rank__stars"
+                        src="https://cdn.stratz.com/images/dota2/seasonal_rank/star_{{ substr($player->steamAccount->rank, 1, 2) }}.png" alt="">
+                </div> --}}
                 <h1 class="player-header__account-name">
                     {{ $player->steamAccount->name }}
                 </h1>
@@ -73,20 +73,20 @@
                         <span class="hero-stats-item--divider hero-stats-item--alias">/</span>
                         <span class="hero-stats-item--value">{{ $player->experience_per_minute }}</span>
                     </div>
-                    {{-- <div class="hero-stats-item hero-stats-item--lane-result">
-            <span class="hero-stats-item--alias">{{ $player->lane_name }}</span>
-            <span
-              class="
-                hero-stats-item--value
-                {{@if laneResult.isWin}}
-                  hero-lane-result--win
-                {{else if laneResult.isLose}}
-                  hero-lane-result--lose
-                {{/if}}
-              ">
-                {{ laneResult.result }}
-            </span>
-          </div> --}}
+                    <div class="hero-stats-item hero-stats-item--lane-result">
+                        <span class="hero-stats-item--alias">{{ $player->lane_name }}</span>
+                        {{-- <span
+                            class="
+                                hero-stats-item--value
+                                {{@if laneResult.isWin}}
+                                hero-lane-result--win
+                                {{else if laneResult.isLose}}
+                                hero-lane-result--lose
+                                {{/if}}
+                            ">
+                            {{ laneResult.result }}
+                        </span> --}}
+                    </div>
                     <div class="hero-stats-item hero-stats-item--hero-damage">
                         <span class="hero-stats-item--alias">Hero Damage</span>
                         <span
